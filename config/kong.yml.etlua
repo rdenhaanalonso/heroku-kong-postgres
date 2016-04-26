@@ -1,8 +1,5 @@
 # Kong app config template
 
-# Based on buildpack sample:
-#   https://github.com/heroku/heroku-buildpack-kong/blob/master/config/kong.yml.etlua.sample
-
 ## Custom plugins on this server
 custom_plugins:
   - ssl
@@ -35,14 +32,14 @@ nginx_working_dir: /app/nginx-working
 ## Port configuration
 proxy_listen: "0.0.0.0:<%= proxy_port %>"
 proxy_listen_ssl: "0.0.0.0:<%= proxy_ssl_port %>"
-admin_api_listen: "127.0.0.1:8001"
+admin_api_listen: "0.0.0.0:<%= admin_api_port %>"
 cluster_listen: "<%= cluster_listen %>"
 
 cluster:
   encrypt: "<%= cluster_secret %>"
 
 ## Specify the DAO to use
-database: cassandra
+database: postgres
 
 ## Databases configuration
 cassandra:
@@ -53,7 +50,7 @@ cassandra:
   username: "<%= cassandra_user %>"
   password: "<%= cassandra_password %>"
   keyspace: "<%= cassandra_keyspace %>"
-  replication_strategy: "SimpleStrategy" 
+  replication_strategy: "SimpleStrategy"
   replication_factor: <%= cassandra_replication_factor %>
   ssl:
     enabled: <%= cassandra_ssl %>
@@ -61,6 +58,14 @@ cassandra:
     verify: true
     certificate_authority: "<%= cassandra_cert %>"
 <% end -%>
+
+postgres:
+  host: "<%= postgres_host %>"
+  port: <%= postgres_port %>
+  user: "<%= postgres_user %>"
+  password: "<%= postgres_password %>"
+  database: "<%= postgres_database %>"
+  ssl: true
 
 ## SSL Settings
 ## (Uncomment the two properties below to set your own certificate)
@@ -71,7 +76,7 @@ cassandra:
 send_anonymous_reports: true
 
 ## In-memory cache size (MB)
-memory_cache_size: 1024
+memory_cache_size: 256
 
 ## Nginx configuration
 nginx: |
@@ -79,7 +84,7 @@ nginx: |
   worker_processes auto;
   # On Heroku, stream into logplex
   # https://devcenter.heroku.com/articles/process-model#output-streams-as-logs
-  error_log stderr warn;
+  error_log stderr info;
   # On Heroku, do not daemonize
   # https://devcenter.heroku.com/articles/runtime-principles#foreground-execution
   # Do NOT set `daemon` here, so it can be overridden at runtime in `Procfile.web`
@@ -219,3 +224,4 @@ nginx: |
       }
     }
   }
+
