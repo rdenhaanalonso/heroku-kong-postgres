@@ -42,23 +42,6 @@ cluster:
 database: postgres
 
 ## Databases configuration
-cassandra:
-  contact_points:
-<% for i, host in pairs(cassandra_hosts) do -%>
-    - "<%= host %>"
-<% end -%>
-  username: "<%= cassandra_user %>"
-  password: "<%= cassandra_password %>"
-  keyspace: "<%= cassandra_keyspace %>"
-  replication_strategy: "SimpleStrategy"
-  replication_factor: <%= cassandra_replication_factor %>
-  ssl:
-    enabled: <%= cassandra_ssl %>
-<% if cassandra_ssl then -%>
-    verify: true
-    certificate_authority: "<%= cassandra_cert %>"
-<% end -%>
-
 postgres:
   host: "<%= postgres_host %>"
   port: <%= postgres_port %>
